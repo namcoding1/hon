@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}상가 사이트{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+    <h1><a href="/">상가114 예제</a></h1>
+    <nav>
+        <a href="/jobs">구인/구직</a>
+    </nav>
+</header>
+<div class="layout">
+    <aside class="ad ad-left">VIP 광고</aside>
+    <div class="container">
+    {% block content %}{% endblock %}
+    </div>
+    <aside class="ad ad-right">VIP 광고</aside>
+</div>
+</body>
+</html>
