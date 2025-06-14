@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}구인/구직 게시판{% endblock %}
+{% block content %}
+<h2>구인/구직 게시판</h2>
+<form action="/jobs/new" method="post" style="margin-bottom:20px;">
+    <input type="text" name="title" placeholder="제목" required>
+    <input type="text" name="company" placeholder="회사명" required>
+    <input type="text" name="location" placeholder="지역">
+    <br>
+    <textarea name="description" placeholder="설명" rows="4" cols="50"></textarea>
+    <br>
+    <button type="submit">등록</button>
+</form>
+<div>
+    {% for job in jobs %}
+    <div class="job">
+        <h3>{{ job.title }} - {{ job.company }}</h3>
+        <p>{{ job.description }}</p>
+        <small>{{ job.location }} | {{ job.date_posted.strftime('%Y-%m-%d %H:%M') }}</small>
+    </div>
+    {% else %}
+    <p>등록된 구인/구직 정보가 없습니다.</p>
+    {% endfor %}
+</div>
+{% endblock %}
