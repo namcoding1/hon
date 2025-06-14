@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<h2>{{ job.title }}</h2>
+<div class="job-detail">
+    <p><strong>회사:</strong> {{ job.company }}</p>
+    <p><strong>분류:</strong> {{ job.category }}</p>
+    <p><strong>업무:</strong> {{ job.job_type }}</p>
+    <p><strong>지역:</strong> {{ job.location }}</p>
+    <p><strong>연락처:</strong> {{ job.contact }}</p>
+    <p><strong>등록일:</strong> {{ job.date_posted.strftime('%Y-%m-%d') }}</p>
+    <p>{{ job.description }}</p>
+    <form action="/jobs/delete/{{ job_id }}" method="post" onsubmit="return confirm('삭제하시겠습니까?');">
+        <button type="submit" class="btn-delete">삭제</button>
+    </form>
+</div>
+<p><a href="/jobs">목록으로 돌아가기</a></p>
+{% endblock %}

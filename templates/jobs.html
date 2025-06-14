@@ -2,7 +2,6 @@
 {% block title %}구인/구직 게시판{% endblock %}
 {% block content %}
 <h2>구인/구직 게시판</h2>
-
 <form method="get" action="/jobs" style="margin-bottom:20px;">
     <select name="category">
         <option value="">전체 분류</option>
@@ -13,7 +12,6 @@
     <input type="text" name="q" placeholder="검색" value="{{ search_query }}">
     <button type="submit">검색</button>
 </form>
-
 <form action="/jobs/new" method="post" style="margin-bottom:20px;">
     <input type="text" name="title" placeholder="제목" required>
     <input type="text" name="company" placeholder="회사명" required>
@@ -28,12 +26,12 @@
         {% endfor %}
     </select>
     <input type="text" name="location" placeholder="지역">
+    <input type="text" name="contact" placeholder="연락처">
     <br>
     <textarea name="description" placeholder="설명" rows="4" cols="50"></textarea>
     <br>
     <button type="submit">등록</button>
 </form>
-
 <table class="job-table">
     <thead>
         <tr>
@@ -48,15 +46,12 @@
     <tbody>
         {% for job in jobs %}
         <tr>
-            <td>{{ job.title }}</td>
+            <td><a href="/jobs/{{ loop.index0 }}">{{ job.title }}</a></td>
             <td>{{ job.company }}</td>
             <td>{{ job.category }}</td>
             <td>{{ job.job_type }}</td>
             <td>{{ job.location }}</td>
             <td>{{ job.date_posted.strftime('%Y-%m-%d') }}</td>
-        </tr>
-        <tr>
-            <td colspan="6">{{ job.description }}</td>
         </tr>
         {% else %}
         <tr>

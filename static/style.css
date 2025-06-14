@@ -1,0 +1,15 @@
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+header {
+    background-color: #1e6dbf;
+    color: white;
+    padding: 10px 20px;
+}
+header h1 { margin: 0; font-size: 24px; }
+nav { margin-top: 10px; }
+nav a { color: white; margin-right: 15px; text-decoration: none; }
+.container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
+.job-table { width: 100%; border-collapse: collapse; }
+.job-table th, .job-table td { border: 1px solid #ccc; padding: 8px; }
+.job-table th { background: #f5f5f5; }
+.job-detail { border: 1px solid #ccc; padding: 15px; }
+.btn-delete { color: red; font-size: 0.9em; }

@@ -3,18 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}상가 사이트{% endblock %}</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        header, nav, main { margin-bottom: 20px; }
-        nav a { margin-right: 10px; }
-        .job { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-        table.job-table { width: 100%; border-collapse: collapse; }
-        table.job-table th, table.job-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        table.job-table th { background: #f5f5f5; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <header>
@@ -23,8 +12,8 @@
         <a href="/jobs">구인/구직</a>
     </nav>
 </header>
-<main>
-    {% block content %}{% endblock %}
-</main>
+<div class="container">
+{% block content %}{% endblock %}
+</div>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, abort
 from datetime import datetime
 
 app = Flask(__name__)
@@ -8,6 +8,7 @@ categories = ["근린상가", "단지내상가", "복합상가", "테마쇼핑�
 job_types = ["분양", "홍보", "관리"]
 
 # In-memory job postings list
+# Each job is a dictionary with details
 jobs = []
 
 @app.route('/')
@@ -37,6 +38,20 @@ def job_list():
         search_query=q,
     )
 
+@app.route('/jobs/<int:job_id>')
+def job_detail(job_id: int):
+    if job_id < 0 or job_id >= len(jobs):
+        abort(404)
+    job = jobs[job_id]
+    return render_template('job_detail.html', job=job, job_id=job_id)
+
+@app.route('/jobs/delete/<int:job_id>', methods=['POST'])
+def job_delete(job_id: int):
+    if job_id < 0 or job_id >= len(jobs):
+        abort(404)
+    jobs.pop(job_id)
+    return redirect(url_for('job_list'))
+
 @app.route('/jobs/new', methods=['POST'])
 def job_new():
     title = request.form.get('title')
@@ -45,6 +60,7 @@ def job_new():
     job_type = request.form.get('job_type')
     description = request.form.get('description')
     location = request.form.get('location')
+    contact = request.form.get('contact')
     if title and company:
         jobs.append({
             'title': title,
@@ -53,6 +69,7 @@ def job_new():
             'job_type': job_type or '',
             'description': description,
             'location': location,
+            'contact': contact or '',
             'date_posted': datetime.utcnow()
         })
     return redirect(url_for('job_list'))
