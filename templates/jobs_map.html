@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}지도 보기{% endblock %}
+{% block content %}
+<h2>지도 보기</h2>
+<div id="map" style="height:500px;"></div>
+<p><a href="/jobs">리스트 보기로 돌아가기</a></p>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44c=" crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+e2hIzZqIMYJw1ZrZH2SFAOL1Mj5njbIdQNuSCl50=" crossorigin=""/>
+<script>
+var map = L.map('map').setView([36.5, 127.5], 7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+}).addTo(map);
+var jobs = {{ jobs|tojson }};
+for (var i = 0; i < jobs.length; i++) {
+    var j = jobs[i];
+    if (j.lat && j.lng) {
+        L.marker([j.lat, j.lng]).addTo(map).bindPopup(j.title);
+    }
+}
+</script>
+{% endblock %}

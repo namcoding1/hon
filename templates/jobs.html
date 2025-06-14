@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}구인/구직 게시판{% endblock %}
+{% block content %}
+<h2>구인/구직 게시판</h2>
+<div class="view-switch">
+    <a href="/jobs?type=구인" {% if selected_type!='구직' %}class="active"{% endif %}>구인</a> |
+    <a href="/jobs?type=구직" {% if selected_type=='구직' %}class="active"{% endif %}>구직</a> |
+    <a href="/jobs">리스트 보기</a> |
+    <a href="/jobs/map">지도 보기</a>
+</div>
+<p><a href="#new" class="btn-new">구인등록</a></p>
+<form action="/jobs/new" method="post" id="new" style="margin-bottom:20px;">
+    <input type="text" name="title" placeholder="제목" required>
+    <input type="text" name="company" placeholder="회사명" required>
+    <select name="post_type">
+        {% for t in post_types %}
+        <option value="{{ t }}">{{ t }}</option>
+        {% endfor %}
+    </select>
+    <select name="category">
+        {% for c in categories %}
+        <option value="{{ c }}">{{ c }}</option>
+        {% endfor %}
+    </select>
+    <select name="job_type">
+        {% for j in job_types %}
+        <option value="{{ j }}">{{ j }}</option>
+        {% endfor %}
+    </select>
+    <input type="text" name="location" placeholder="지역">
+    <input type="text" name="lat" placeholder="위도">
+    <input type="text" name="lng" placeholder="경도">
+    <input type="text" name="contact" placeholder="연락처">
+    <select name="premium">
+        {% for p in premium_levels %}
+        <option value="{{ p }}">프리미엄 {{ p }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <textarea name="description" placeholder="설명" rows="4" cols="50"></textarea>
+    <br>
+    <button type="submit">등록</button>
+</form>
+
+{% if premium_top %}
+<h3>프리미엄 (상)</h3>
+<ul>
+{% for job in premium_top %}
+    <li><a href="/jobs/{{ job.id }}">{{ job.title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if premium_bottom %}
+<h3>프리미엄 (하)</h3>
+<ul>
+{% for job in premium_bottom %}
+    <li><a href="/jobs/{{ job.id }}">{{ job.title }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+<table class="job-table">
+    <thead>
+        <tr>
+            <th>현장명</th>
+            <th>소재지</th>
+            <th>응시요건</th>
+            <th>등록일</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for job in jobs %}
+        <tr>
+            <td><a href="/jobs/{{ job.id }}">{{ job.title }}</a></td>
+            <td>{{ job.location }}</td>
+            <td>{{ job.description }}</td>
+            <td>{{ job.date_posted.strftime('%Y-%m-%d') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">등록된 구인/구직 정보가 없습니다.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<form method="get" action="/jobs" class="filter-form" style="margin-top:20px;">
+    <select name="type">
+        <option value="">구분선택</option>
+        {% for t in post_types %}
+        <option value="{{ t }}" {% if t == selected_type %}selected{% endif %}>{{ t }}</option>
+        {% endfor %}
+    </select>
+    <select name="category">
+        <option value="">분류선택</option>
+        {% for c in categories %}
+        <option value="{{ c }}" {% if c == selected_category %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+    </select>
+    <select name="job_type">
+        <option value="">업무선택</option>
+        {% for j in job_types %}
+        <option value="{{ j }}" {% if j == selected_job_type %}selected{% endif %}>{{ j }}</option>
+        {% endfor %}
+    </select>
+    <input type="text" name="q" placeholder="검색어" value="{{ search_query }}">
+    <button type="submit">검색</button>
+</form>
+{% endblock %}
