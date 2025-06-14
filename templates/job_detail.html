@@ -10,6 +10,16 @@
     <p><strong>연락처:</strong> {{ job.contact }}</p>
     <p><strong>등록일:</strong> {{ job.date_posted.strftime('%Y-%m-%d') }}</p>
     <p>{{ job.description }}</p>
+    {% if job.lat and job.lng %}
+    <div id="map" style="height:300px;margin-top:10px;"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44c=" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+e2hIzZqIMYJw1ZrZH2SFAOL1Mj5njbIdQNuSCl50=" crossorigin=""/>
+    <script>
+    var map = L.map('map').setView([{{ job.lat }}, {{ job.lng }}], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:18}).addTo(map);
+    L.marker([{{ job.lat }}, {{ job.lng }}]).addTo(map).bindPopup('{{ job.title }}');
+    </script>
+    {% endif %}
     <form action="/jobs/delete/{{ job_id }}" method="post" onsubmit="return confirm('삭제하시겠습니까?');">
         <button type="submit" class="btn-delete">삭제</button>
     </form>
