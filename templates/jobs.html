@@ -100,7 +100,7 @@
     <select name="job_type">
         <option value="">업무선택</option>
         {% for j in job_types %}
-        <option value="{{ j }}">{{ j }}</option>
+        <option value="{{ j }}" {% if j == selected_job_type %}selected{% endif %}>{{ j }}</option>
         {% endfor %}
     </select>
     <input type="text" name="q" placeholder="검색어" value="{{ search_query }}">

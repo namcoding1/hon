@@ -24,6 +24,7 @@ def index():
 @app.route('/jobs')
 def job_list():
     category = request.args.get('category', '')
+    job_type = request.args.get('job_type', '')
     q = request.args.get('q', '').lower()
     post_type = request.args.get('type', '')
 
@@ -32,6 +33,8 @@ def job_list():
         if category and job['category'] != category:
             continue
         if post_type and job.get('post_type') != post_type:
+            continue
+        if job_type and job['job_type'] != job_type:
             continue
         text = f"{job['title']} {job['company']} {job['description']}"
         if q and q not in text.lower():
@@ -53,6 +56,7 @@ def job_list():
         post_types=post_types,
         selected_type=post_type,
         selected_category=category,
+        selected_job_type=job_type,
         search_query=q,
     )
 
