@@ -144,7 +144,7 @@ class Tetris:
                 self.move(1, 0)
             elif c == curses.KEY_DOWN:
                 self.drop()
-            elif c == curses.KEY_UP:
+            elif c == ord('s'):
                 self.rotate_tetromino()
             elif c == ord('q'):
                 break

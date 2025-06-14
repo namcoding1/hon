@@ -14,7 +14,7 @@ Execute the following command from the repository root:
 python3 tetris.py
 ```
 
-Use the arrow keys to move and rotate the pieces. Press `q` to quit.
+Use the left, right and down arrow keys to move the pieces. Press `s` to rotate them and `q` to quit.
 
 The game board is drawn in the middle of your terminal with a visible border, so
 it's clear where the sides and bottom are.
