@@ -16,5 +16,4 @@ python3 tetris.py
 
 Use the left, right and down arrow keys to move the pieces. Press `s` to rotate them and `q` to quit.
 
-The game board is drawn in the middle of your terminal with a visible border, so
-it's clear where the sides and bottom are.
+The board now measures 12 columns by 24 rows and appears centered on your terminal. A colorful checkered background fills the rest of the window and a border clearly marks the play area.

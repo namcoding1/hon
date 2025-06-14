@@ -13,8 +13,8 @@ TETROMINOES = [
     [[0, 1, 1], [1, 1, 0]]                   # Z
 ]
 
-WIDTH = 10
-HEIGHT = 20
+WIDTH = 12
+HEIGHT = 24
 
 class Tetris:
     def __init__(self, stdscr):
@@ -24,6 +24,19 @@ class Tetris:
         curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)  # pieces
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_BLACK)  # background
         curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)  # border/text
+
+        # color pairs for checkered background
+        bg_colors = [
+            curses.COLOR_BLUE,
+            curses.COLOR_MAGENTA,
+            curses.COLOR_CYAN,
+            curses.COLOR_YELLOW,
+        ]
+        self.bg_pairs = []
+        for idx, col in enumerate(bg_colors):
+            num = 4 + idx
+            curses.init_pair(num, col, curses.COLOR_BLACK)
+            self.bg_pairs.append(num)
 
         self.max_y, self.max_x = self.stdscr.getmaxyx()
         self.start_y = (self.max_y - HEIGHT - 2) // 2
@@ -87,8 +100,15 @@ class Tetris:
         curses.endwin()
         quit()
 
+    def draw_background(self):
+        for y in range(self.max_y):
+            for x in range(0, self.max_x, 2):
+                pair = curses.color_pair(self.bg_pairs[(x // 2 + y) % len(self.bg_pairs)])
+                self.stdscr.addstr(y, x, '  ', pair)
+
     def draw_board(self):
         self.stdscr.erase()
+        self.draw_background()
         # Draw border
         for x in range(WIDTH * 2 + 2):
             self.stdscr.addstr(self.start_y, self.start_x + x, '#', curses.color_pair(3))
