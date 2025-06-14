@@ -19,6 +19,16 @@ HEIGHT = 20
 class Tetris:
     def __init__(self, stdscr):
         self.stdscr = stdscr
+        curses.start_color()
+        curses.use_default_colors()
+        curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_BLACK)  # pieces
+        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_BLACK)  # background
+        curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLACK)  # border/text
+
+        self.max_y, self.max_x = self.stdscr.getmaxyx()
+        self.start_y = (self.max_y - HEIGHT - 2) // 2
+        self.start_x = (self.max_x - WIDTH * 2 - 2) // 2
+
         self.board = [[0 for _ in range(WIDTH)] for _ in range(HEIGHT)]
         self.score = 0
         self.level = 1
@@ -68,25 +78,42 @@ class Tetris:
         self.score += cleared ** 2
 
     def game_over(self):
-        self.stdscr.addstr(HEIGHT // 2, WIDTH // 2 - 4, 'Game Over')
+        msg = 'Game Over'
+        y = self.start_y + HEIGHT // 2
+        x = self.start_x + WIDTH - len(msg) // 2
+        self.stdscr.addstr(y, x, msg, curses.color_pair(3))
         self.stdscr.refresh()
         time.sleep(2)
         curses.endwin()
         quit()
 
     def draw_board(self):
-        self.stdscr.clear()
+        self.stdscr.erase()
+        # Draw border
+        for x in range(WIDTH * 2 + 2):
+            self.stdscr.addstr(self.start_y, self.start_x + x, '#', curses.color_pair(3))
+            self.stdscr.addstr(self.start_y + HEIGHT + 1, self.start_x + x, '#', curses.color_pair(3))
+        for y in range(HEIGHT):
+            self.stdscr.addstr(self.start_y + 1 + y, self.start_x, '#', curses.color_pair(3))
+            self.stdscr.addstr(self.start_y + 1 + y, self.start_x + WIDTH * 2 + 1, '#', curses.color_pair(3))
+
+        # Draw board cells
         for y, row in enumerate(self.board):
             for x, cell in enumerate(row):
-                if cell:
-                    self.stdscr.addstr(y, x*2, '[]')
-                else:
-                    self.stdscr.addstr(y, x*2, '  ')
+                attr = curses.color_pair(1) if cell else curses.color_pair(2)
+                char = '[]' if cell else '  '
+                self.stdscr.addstr(self.start_y + 1 + y, self.start_x + 1 + x*2, char, attr)
+
+        # Draw active tetromino
         for i, row in enumerate(self.tetromino):
             for j, cell in enumerate(row):
                 if cell and self.tetro_y + i >= 0:
-                    self.stdscr.addstr(self.tetro_y + i, (self.tetro_x + j)*2, '[]')
-        self.stdscr.addstr(0, WIDTH*2 + 2, f'Score: {self.score}')
+                    self.stdscr.addstr(self.start_y + 1 + self.tetro_y + i,
+                                       self.start_x + 1 + (self.tetro_x + j) * 2,
+                                       '[]', curses.color_pair(1))
+
+        self.stdscr.addstr(self.start_y, self.start_x + WIDTH * 2 + 4,
+                           f'Score: {self.score}', curses.color_pair(3))
         self.stdscr.refresh()
 
     def move(self, dx, dy):

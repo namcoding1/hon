@@ -15,3 +15,6 @@ python3 tetris.py
 ```
 
 Use the arrow keys to move and rotate the pieces. Press `q` to quit.
+
+The game board is drawn in the middle of your terminal with a visible border, so
+it's clear where the sides and bottom are.
