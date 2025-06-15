@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}SNS 예제{% endblock %}
+{% block content %}
+<h2>SNS 예제</h2>
+<form action="/sns/new" method="post" class="sns-new">
+    <input type="text" name="user" placeholder="사용자명" required>
+    <input type="text" name="image" placeholder="이미지 URL" required>
+    <input type="text" name="caption" placeholder="내용">
+    <button type="submit">업로드</button>
+</form>
+{% for post in posts %}
+<div class="sns-post">
+    <p><strong>{{ post.user }}</strong></p>
+    {% if post.image %}<img src="{{ post.image }}" class="sns-image" alt="image">{% endif %}
+    <p>{{ post.caption }}</p>
+    <form action="/sns/like/{{ post.id }}" method="post" style="display:inline-block;">
+        <button type="submit">❤ {{ post.likes }}</button>
+    </form>
+    <ul class="sns-comments">
+        {% for c in post.comments %}
+        <li>{{ c }}</li>
+        {% endfor %}
+    </ul>
+    <form action="/sns/comment/{{ post.id }}" method="post" class="sns-comment-form">
+        <input type="text" name="comment" placeholder="댓글" required>
+        <button type="submit">댓글달기</button>
+    </form>
+</div>
+{% endfor %}
+{% endblock %}
