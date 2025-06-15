@@ -17,6 +17,10 @@ post_types = ["구인", "구직"]
 # Each job is a dictionary with details
 jobs = []
 
+# In-memory SNS posts list
+# Each post is a dictionary with id, user, image URL, caption, likes and comments
+sns_posts = []
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -78,6 +82,48 @@ def job_delete(job_id: int):
         abort(404)
     jobs.pop(idx)
     return redirect(url_for('job_list'))
+
+# -------- SNS Routes --------
+@app.route('/sns')
+def sns_list():
+    return render_template('sns.html', posts=sns_posts)
+
+
+@app.route('/sns/new', methods=['POST'])
+def sns_new():
+    user = request.form.get('user')
+    image = request.form.get('image')
+    caption = request.form.get('caption')
+    if user and image:
+        sns_posts.append({
+            'id': len(sns_posts),
+            'user': user,
+            'image': image,
+            'caption': caption or '',
+            'likes': 0,
+            'comments': []
+        })
+    return redirect(url_for('sns_list'))
+
+
+@app.route('/sns/like/<int:post_id>', methods=['POST'])
+def sns_like(post_id: int):
+    post = next((p for p in sns_posts if p['id'] == post_id), None)
+    if not post:
+        abort(404)
+    post['likes'] += 1
+    return redirect(url_for('sns_list'))
+
+
+@app.route('/sns/comment/<int:post_id>', methods=['POST'])
+def sns_comment(post_id: int):
+    post = next((p for p in sns_posts if p['id'] == post_id), None)
+    if not post:
+        abort(404)
+    comment = request.form.get('comment')
+    if comment:
+        post['comments'].append(comment)
+    return redirect(url_for('sns_list'))
 
 @app.route('/jobs/new', methods=['POST'])
 def job_new():
