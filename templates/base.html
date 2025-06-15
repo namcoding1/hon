@@ -9,7 +9,16 @@
 <header>
     <h1><a href="/">상가114 예제</a></h1>
     <nav>
-        <a href="/jobs">구인/구직</a>
+        <a href="/jobs">구인/구직</a> |
+        <a href="/feed">인스타그램</a>
+        {% if session.get('username') %}
+        | <a href="/upload">업로드</a> |
+        <span>{{ session['username'] }}</span> |
+        <a href="/logout">로그아웃</a>
+        {% else %}
+        | <a href="/signup">회원가입</a> |
+        <a href="/login">로그인</a>
+        {% endif %}
     </nav>
 </header>
 <div class="layout">

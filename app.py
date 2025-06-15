@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, abort
+from flask import Flask, render_template, request, redirect, url_for, abort, session
 from datetime import datetime
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.secret_key = 'dev'
 
 # Job categories and types
 categories = ["근린상가", "단지내상가", "복합상가", "테마쇼핑몰", "기타"]
@@ -16,6 +18,10 @@ post_types = ["구인", "구직"]
 # In-memory job postings list
 # Each job is a dictionary with details
 jobs = []
+
+# Simple in-memory user data and photo posts
+users = {}
+posts = []
 
 @app.route('/')
 def index():
@@ -111,6 +117,63 @@ def job_new():
             'date_posted': datetime.utcnow()
         })
     return redirect(url_for('job_list'))
+
+# -------- Instagram-like Features --------
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username and password and username not in users:
+            users[username] = password
+            session['username'] = username
+            return redirect(url_for('feed'))
+    return render_template('signup.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        if username in users and users[username] == password:
+            session['username'] = username
+            return redirect(url_for('feed'))
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('feed'))
+
+
+@app.route('/feed')
+def feed():
+    sorted_posts = sorted(posts, key=lambda x: x['time'], reverse=True)
+    return render_template('feed.html', posts=sorted_posts)
+
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        img = request.files.get('image')
+        caption = request.form.get('caption', '')
+        if img:
+            filename = secure_filename(img.filename)
+            path = f"static/uploads/{filename}"
+            img.save(path)
+            posts.append({
+                'username': session['username'],
+                'filename': filename,
+                'caption': caption,
+                'time': datetime.utcnow()
+            })
+            return redirect(url_for('feed'))
+    return render_template('upload.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
