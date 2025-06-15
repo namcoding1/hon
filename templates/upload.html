@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}업로드{% endblock %}
+{% block content %}
+<h2>사진 업로드</h2>
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" required>
+    <input type="text" name="caption" placeholder="설명" required>
+    <button type="submit">올리기</button>
+</form>
+{% endblock %}

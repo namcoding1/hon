@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}피드{% endblock %}
+{% block content %}
+<h2>피드</h2>
+{% for p in posts %}
+<div class="post">
+    <p><strong>{{ p.username }}</strong> - {{ p.time.strftime('%Y-%m-%d %H:%M') }}</p>
+    <img src="{{ url_for('static', filename='uploads/' + p.filename) }}" style="max-width:100%">
+    <p>{{ p.caption }}</p>
+</div>
+<hr>
+{% else %}
+<p>게시물이 없습니다.</p>
+{% endfor %}
+{% endblock %}
