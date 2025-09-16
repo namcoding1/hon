@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}블로그 - 상가 사이트{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div>
+        <h2>블로그</h2>
+        <p class="page-description">자동 발행된 소식을 확인하세요.</p>
+    </div>
+    <a class="btn-manage" href="{{ url_for('blog_schedule') }}">발행 일정 관리</a>
+</section>
+{% if posts %}
+<div class="blog-list">
+    {% for post in posts %}
+    <article class="blog-card">
+        <h3><a href="{{ url_for('blog_detail', post_id=post.id) }}">{{ post.title }}</a></h3>
+        <div class="meta">{{ post.publish_at.strftime('%Y-%m-%d %H:%M') }}</div>
+        {% if post.tags %}
+        <ul class="tags">
+            {% for tag in post.tags %}
+            <li>{{ tag }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <p class="excerpt">
+            {% if post.excerpt %}
+                {{ post.excerpt }}
+            {% else %}
+                {{ post.content[:160] }}{% if post.content|length > 160 %}...{% endif %}
+            {% endif %}
+        </p>
+        <a class="read-more" href="{{ url_for('blog_detail', post_id=post.id) }}">자세히 보기</a>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<p class="empty-state">발행된 글이 없습니다. 발행 일정을 등록해 보세요.</p>
+{% endif %}
+{% endblock %}
